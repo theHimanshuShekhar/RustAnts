@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use min_max::*;
 use rand::Rng;
+use random_color::RandomColor;
 
 use crate::{
     components::{Ant, Direction},
@@ -20,17 +21,22 @@ impl Plugin for AntPlugin {
 fn ant_spawn_system(mut commands: Commands) {
     // Spawn Ant shape
     let shape = shapes::Circle {
-        radius: 10.,
+        radius: ANT_SIZE,
         ..Default::default()
     };
 
     for _ in 0..ANTS_COUNT {
+        let random_color = RandomColor::new().alpha(1.).to_hsl_array();
         commands
             .spawn_bundle(GeometryBuilder::build_as(
                 &shape,
                 DrawMode::Outlined {
-                    fill_mode: FillMode::color(Color::BLACK),
-                    outline_mode: StrokeMode::new(Color::DARK_GRAY, 0.5),
+                    fill_mode: FillMode::color(bevy::prelude::Color::hsl(
+                        random_color[0] as f32,
+                        random_color[1] as f32,
+                        random_color[2] as f32,
+                    )),
+                    outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 1.),
                 },
                 Transform::default(),
             ))

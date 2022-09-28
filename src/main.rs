@@ -1,5 +1,7 @@
+use std::time::Duration;
+
 use ant::AntPlugin;
-use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::{prelude::*, time::FixedTimestep, window::PresentMode};
 // use bevy_egui::{egui, EguiContext, EguiPlugin};
 use bevy_prototype_lyon::prelude::*;
@@ -17,10 +19,10 @@ const ANTS_COUNT: i32 = 10;
 const ANT_SIZE: f32 = 10.;
 
 // Window Size
-const WINDOW_HEIGHT: f32 = 800.;
+const WINDOW_HEIGHT: f32 = 720.;
 const WINDOW_WIDTH: f32 = 1280.;
 
-const BACKGROUND_COLOR: Color = Color::rgb(0.4, 0.4, 0.4);
+const BACKGROUND_COLOR: Color = Color::rgb(30. / 256., 33. / 256., 36. / 256.);
 
 // fn menu_ui(mut egui_context: ResMut<EguiContext>) {
 //     egui::Window::new("RustAnts!").show(egui_context.ctx_mut(), |ui| {
@@ -35,6 +37,7 @@ fn main() {
             title: "RustANTS!".to_string(),
             width: WINDOW_WIDTH,
             height: WINDOW_HEIGHT,
+            resizable: false,
             present_mode: PresentMode::AutoVsync,
             ..Default::default()
         })
@@ -42,6 +45,10 @@ fn main() {
         .add_plugin(ShapePlugin)
         .add_plugin(AntPlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugin(LogDiagnosticsPlugin {
+            wait_duration: Duration::new(1, 0),
+            ..Default::default()
+        })
         // .add_plugin(EguiPlugin)
         // .add_system(menu_ui)
         .add_startup_system(setup_system)
