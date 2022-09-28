@@ -7,6 +7,7 @@ edition = "2021"
 bevy_egui = "0.16.1"
 bevy_prototype_lyon = "0.6.0"
 rand = "0.8.5"
+min-max = "0.1.8"
 
 [dependencies.bevy]
 version = "0.8.1"

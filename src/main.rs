@@ -1,19 +1,19 @@
 use ant::AntPlugin;
-use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
-use bevy::{
-    prelude::*,
-    // time::FixedTimestep,
-    window::PresentMode,
-};
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
+use bevy::{prelude::*, time::FixedTimestep, window::PresentMode};
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 use bevy_prototype_lyon::prelude::*;
 
 mod ant;
 mod components;
 
+pub const PI: f32 = 3.14159265358979323846264338327950288f32;
+
 // Defines the amount of time that should elapse between each physics step.
 const TIME_STEP: f32 = 1.0 / 60.0;
-const BASE_SPEED: f32 = 500.;
+const MOVE_SPEED: f32 = 50.;
+// const TURN_SPEED: f32 = 30. * 2. * PI;
+const ANTS_COUNT: i32 = 10;
 
 // Window Size
 const WINDOW_HEIGHT: f32 = 800.;
@@ -41,10 +41,10 @@ fn main() {
         .add_plugin(ShapePlugin)
         .add_plugin(EguiPlugin)
         .add_plugin(AntPlugin)
-        .add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_system(menu_ui)
         .add_startup_system(setup_system)
+        .add_system_set(SystemSet::new().with_run_criteria(FixedTimestep::step(TIME_STEP as f64)))
         .run();
 }
 pub struct WinSize {
