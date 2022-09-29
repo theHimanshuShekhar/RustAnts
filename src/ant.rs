@@ -5,7 +5,7 @@ use rand::Rng;
 
 use crate::{
     components::{Ant, Direction, Food},
-    WinSize, ANTS_COUNT, ANT_SIZE, MOVE_SPEED, TIME_STEP, WANDER_STRENGTH,
+    GlobalSettings, WinSize, TIME_STEP,
 };
 
 use self::pheromone::PheromonePlugin;
@@ -21,14 +21,14 @@ impl Plugin for AntPlugin {
     }
 }
 
-fn ant_spawn_system(mut commands: Commands) {
+fn ant_spawn_system(mut commands: Commands, settings: ResMut<GlobalSettings>) {
     // Spawn Ant shape
     let shape = shapes::Circle {
-        radius: ANT_SIZE,
+        radius: settings.ants_size,
         ..Default::default()
     };
 
-    for _ in 0..ANTS_COUNT {
+    for _ in 0..settings.ants_count {
         commands
             .spawn_bundle(GeometryBuilder::build_as(
                 &shape,
@@ -53,24 +53,25 @@ fn ant_spawn_system(mut commands: Commands) {
 
 fn ant_update_system(
     mut query: Query<(&mut Direction, &mut Transform), With<Ant>>,
+    settings: ResMut<GlobalSettings>,
     win_size: Res<WinSize>,
 ) {
     for (mut direction, mut transform) in query.iter_mut() {
         let translation = &mut transform.translation;
         let angle = &mut direction.angle;
 
-        let max_x: f32 = win_size.width / 2. - ANT_SIZE;
-        let min_x: f32 = -win_size.width / 2. + ANT_SIZE;
-        let max_y: f32 = win_size.height / 2. - ANT_SIZE;
-        let min_y: f32 = -win_size.height / 2. + ANT_SIZE;
+        let max_x: f32 = win_size.width / 2. - settings.ants_size;
+        let min_x: f32 = -win_size.width / 2. + settings.ants_size;
+        let max_y: f32 = win_size.height / 2. - settings.ants_size;
+        let min_y: f32 = -win_size.height / 2. + settings.ants_size;
 
         let x_change = angle.cos();
         let y_change = angle.sin();
 
         // Update position and angle of ant
-        translation.x = translation.x + x_change * TIME_STEP * MOVE_SPEED;
-        translation.y = translation.y + y_change * TIME_STEP * MOVE_SPEED;
-        *angle = *angle + rand::thread_rng().gen_range(-5.0..5.0) * WANDER_STRENGTH;
+        translation.x = translation.x + x_change * TIME_STEP * settings.move_speed;
+        translation.y = translation.y + y_change * TIME_STEP * settings.move_speed;
+        *angle = *angle + rand::thread_rng().gen_range(-5.0..5.0) * settings.wander_strength;
 
         // Clamp ant to be inside window size
         if translation.x < min_x

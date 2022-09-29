@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::{
     components::{Ant, Food, Pheromone, PheromoneAge},
-    PHEROMONE_LIFE,
+    GlobalSettings,
 };
 
 struct TrailSpawnTimer(Timer);
@@ -25,6 +25,7 @@ fn trail_spawn_system(
     time: Res<Time>,
     mut timer: ResMut<TrailSpawnTimer>,
     mut query: Query<(&mut Food, &mut Transform), With<Ant>>,
+    settings: ResMut<GlobalSettings>,
 ) {
     // Spawn Pheromone shape
     let shape = shapes::Circle {
@@ -34,18 +35,33 @@ fn trail_spawn_system(
     if timer.0.tick(time.delta()).just_finished() {
         for (mut food, mut transform) in query.iter_mut() {
             let translation = &mut transform.translation;
-            let _has_food = &mut food.has_food;
+            let has_food = &mut food.has_food;
 
             // println!(
             //     "x:{},y:{} | hasfood:{}",
             //     translation.x, translation.y, has_food
+            //     settings.home_pheromone_color
             // );
+
+            let pheromone_color = if *has_food {
+                bevy::prelude::Color::rgb(
+                    settings.food_pheromone_color[0],
+                    settings.food_pheromone_color[1],
+                    settings.food_pheromone_color[2],
+                )
+            } else {
+                bevy::prelude::Color::rgb(
+                    settings.home_pheromone_color[0],
+                    settings.home_pheromone_color[1],
+                    settings.home_pheromone_color[2],
+                )
+            };
 
             commands
                 .spawn_bundle(GeometryBuilder::build_as(
                     &shape,
                     DrawMode::Outlined {
-                        fill_mode: FillMode::color(Color::LIME_GREEN),
+                        fill_mode: FillMode::color(pheromone_color),
                         outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 0.0),
                     },
                     Transform::from_xyz(translation.x, translation.y, 0.),
@@ -58,15 +74,16 @@ fn trail_spawn_system(
 
 fn pheromone_update_system(
     mut commands: Commands,
-    mut query: Query<(Entity, &mut PheromoneAge), With<Pheromone>>,
     time: Res<Time>,
     mut timer: ResMut<TrailDespawnTimer>,
+    mut query: Query<(Entity, &mut PheromoneAge), With<Pheromone>>,
+    settings: ResMut<GlobalSettings>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
         for (pheromone, mut pheromone_age) in query.iter_mut() {
             let age = &mut pheromone_age.age;
 
-            if *age >= PHEROMONE_LIFE {
+            if *age >= settings.pheremone_life {
                 commands.entity(pheromone).despawn();
             } else {
                 *age += 1;
