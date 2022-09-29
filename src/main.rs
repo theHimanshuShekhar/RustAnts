@@ -5,9 +5,11 @@ use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::{prelude::*, time::FixedTimestep, window::PresentMode};
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 use bevy_prototype_lyon::prelude::*;
+use food::FoodPlugin;
 
 mod ant;
 mod components;
+mod food;
 
 pub const PI: f32 = 3.14159265358979323846264338327950288f32;
 
@@ -52,6 +54,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(ShapePlugin)
         .add_plugin(AntPlugin)
+        .add_plugin(FoodPlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin {
             wait_duration: Duration::new(10, 0),
