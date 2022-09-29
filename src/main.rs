@@ -18,12 +18,13 @@ const MOVE_SPEED: f32 = 100.;
 const ANTS_COUNT: i32 = 10;
 const ANT_SIZE: f32 = 5.;
 const WANDER_STRENGTH: f32 = 0.05;
+const PHEROMONE_LIFE: i32 = 50;
 
 // Window Size
 const WINDOW_HEIGHT: f32 = 720.;
 const WINDOW_WIDTH: f32 = 1280.;
 
-const BACKGROUND_COLOR: Color = Color::WHITE; //rgb(30. / 256., 33. / 256., 36. / 256.);
+const BACKGROUND_COLOR: Color = Color::WHITE;
 
 // fn menu_ui(mut egui_context: ResMut<EguiContext>) {
 //     egui::Window::new("RustAnts!").show(egui_context.ctx_mut(), |ui| {
@@ -47,7 +48,7 @@ fn main() {
         .add_plugin(AntPlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin {
-            wait_duration: Duration::new(1, 0),
+            wait_duration: Duration::new(10, 0),
             ..Default::default()
         })
         // .add_plugin(EguiPlugin)

@@ -2,19 +2,25 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use min_max::*;
 use rand::Rng;
-use random_color::RandomColor;
 
 use crate::{
-    components::{Ant, Direction},
-    WinSize, ANTS_COUNT, ANT_SIZE, MOVE_SPEED, TIME_STEP, WANDER_STRENGTH,
+    components::{Ant, Direction, Food, Pheromone, PheromoneAge, ID},
+    WinSize, ANTS_COUNT, ANT_SIZE, MOVE_SPEED, PHEROMONE_LIFE, TIME_STEP, WANDER_STRENGTH,
 };
+
+struct TrailSpawnTimer(Timer);
+struct TrailDespawnTimer(Timer);
 
 pub struct AntPlugin;
 
 impl Plugin for AntPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system_to_stage(StartupStage::PostStartup, ant_spawn_system)
-            .add_system(ant_update_system);
+            .insert_resource(TrailSpawnTimer(Timer::from_seconds(0.05, true)))
+            .insert_resource(TrailDespawnTimer(Timer::from_seconds(0.05, true)))
+            .add_system(ant_update_system)
+            .add_system(trail_spawn_system)
+            .add_system(pheromone_update_system);
     }
 }
 
@@ -26,19 +32,11 @@ fn ant_spawn_system(mut commands: Commands) {
     };
 
     for _ in 0..ANTS_COUNT {
-        // let random_color = RandomColor::new().alpha(1.).to_hsl_array();
         commands
             .spawn_bundle(GeometryBuilder::build_as(
                 &shape,
                 DrawMode::Outlined {
-                    fill_mode: FillMode::color(
-                        Color::BLACK,
-                        // bevy::prelude::Color::hsl(
-                        // random_color[0] as f32,
-                        // random_color[1] as f32,
-                        // random_color[2] as f32,
-                        // )
-                    ),
+                    fill_mode: FillMode::color(Color::BLACK),
                     outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 1.),
                 },
                 Transform::default(),
@@ -47,8 +45,9 @@ fn ant_spawn_system(mut commands: Commands) {
             .insert(Direction {
                 angle: rand::thread_rng().gen_range(0.0..360.0),
             })
+            .insert(Food { has_food: false })
             .insert_bundle(SpatialBundle {
-                transform: Transform::from_scale(Vec3::splat(1.0)),
+                transform: Transform::from_xyz(0., 0., 1.),
                 visibility: Visibility { is_visible: true },
                 ..Default::default()
             });
@@ -85,6 +84,66 @@ fn ant_update_system(
             translation.x = min_partial!(max_x, max_partial!(min_x, translation.x));
             translation.y = min_partial!(max_y, max_partial!(min_y, translation.y));
             *angle = rand::thread_rng().gen_range(0.0..360.0);
+        }
+    }
+}
+
+fn trail_spawn_system(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut timer: ResMut<TrailSpawnTimer>,
+    mut query: Query<(&mut Food, &mut Transform), With<Ant>>,
+) {
+    // Spawn Pheromone shape
+    let shape = shapes::Circle {
+        radius: 3.,
+        ..Default::default()
+    };
+    if timer.0.tick(time.delta()).just_finished() {
+        for (mut food, mut transform) in query.iter_mut() {
+            let translation = &mut transform.translation;
+            let _has_food = &mut food.has_food;
+
+            // println!(
+            //     "x:{},y:{} | hasfood:{}",
+            //     translation.x, translation.y, has_food
+            // );
+
+            let pheremone_id = commands
+                .spawn_bundle(GeometryBuilder::build_as(
+                    &shape,
+                    DrawMode::Outlined {
+                        fill_mode: FillMode::color(Color::LIME_GREEN),
+                        outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 0.0),
+                    },
+                    Transform::from_xyz(translation.x, translation.y, 0.),
+                ))
+                .insert(Pheromone)
+                .insert(PheromoneAge { age: 0 })
+                .id();
+
+            commands.entity(pheremone_id).insert(ID {
+                id: pheremone_id.id(),
+            });
+        }
+    }
+}
+
+fn pheromone_update_system(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut PheromoneAge), With<Pheromone>>,
+    time: Res<Time>,
+    mut timer: ResMut<TrailDespawnTimer>,
+) {
+    if timer.0.tick(time.delta()).just_finished() {
+        for (pheromone, mut pheromone_age) in query.iter_mut() {
+            let age = &mut pheromone_age.age;
+
+            if *age >= PHEROMONE_LIFE {
+                commands.entity(pheromone).despawn();
+            } else {
+                *age += 1;
+            }
         }
     }
 }
