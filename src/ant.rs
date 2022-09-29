@@ -6,7 +6,7 @@ use random_color::RandomColor;
 
 use crate::{
     components::{Ant, Direction},
-    WinSize, ANTS_COUNT, ANT_SIZE, MOVE_SPEED, TIME_STEP,
+    WinSize, ANTS_COUNT, ANT_SIZE, MOVE_SPEED, TIME_STEP, WANDER_STRENGTH,
 };
 
 pub struct AntPlugin;
@@ -26,16 +26,19 @@ fn ant_spawn_system(mut commands: Commands) {
     };
 
     for _ in 0..ANTS_COUNT {
-        let random_color = RandomColor::new().alpha(1.).to_hsl_array();
+        // let random_color = RandomColor::new().alpha(1.).to_hsl_array();
         commands
             .spawn_bundle(GeometryBuilder::build_as(
                 &shape,
                 DrawMode::Outlined {
-                    fill_mode: FillMode::color(bevy::prelude::Color::hsl(
-                        random_color[0] as f32,
-                        random_color[1] as f32,
-                        random_color[2] as f32,
-                    )),
+                    fill_mode: FillMode::color(
+                        Color::BLACK,
+                        // bevy::prelude::Color::hsl(
+                        // random_color[0] as f32,
+                        // random_color[1] as f32,
+                        // random_color[2] as f32,
+                        // )
+                    ),
                     outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 1.),
                 },
                 Transform::default(),
@@ -68,9 +71,12 @@ fn ant_update_system(
         let x_change = angle.cos();
         let y_change = angle.sin();
 
+        // Update position and angle of ant
         translation.x = translation.x + x_change * TIME_STEP * MOVE_SPEED;
         translation.y = translation.y + y_change * TIME_STEP * MOVE_SPEED;
+        *angle = *angle + rand::thread_rng().gen_range(-5.0..5.0) * WANDER_STRENGTH;
 
+        // Clamp ant to be inside window size
         if translation.x < min_x
             || translation.x >= max_x
             || translation.y < min_y

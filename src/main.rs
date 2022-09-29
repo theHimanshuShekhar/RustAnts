@@ -13,16 +13,17 @@ pub const PI: f32 = 3.14159265358979323846264338327950288f32;
 
 // Defines the amount of time that should elapse between each physics step.
 const TIME_STEP: f32 = 1.0 / 60.0;
-const MOVE_SPEED: f32 = 50.;
+const MOVE_SPEED: f32 = 100.;
 // const TURN_SPEED: f32 = 30. * 2. * PI;
 const ANTS_COUNT: i32 = 10;
-const ANT_SIZE: f32 = 10.;
+const ANT_SIZE: f32 = 5.;
+const WANDER_STRENGTH: f32 = 0.05;
 
 // Window Size
 const WINDOW_HEIGHT: f32 = 720.;
 const WINDOW_WIDTH: f32 = 1280.;
 
-const BACKGROUND_COLOR: Color = Color::rgb(30. / 256., 33. / 256., 36. / 256.);
+const BACKGROUND_COLOR: Color = Color::WHITE; //rgb(30. / 256., 33. / 256., 36. / 256.);
 
 // fn menu_ui(mut egui_context: ResMut<EguiContext>) {
 //     egui::Window::new("RustAnts!").show(egui_context.ctx_mut(), |ui| {
@@ -37,7 +38,7 @@ fn main() {
             title: "RustANTS!".to_string(),
             width: WINDOW_WIDTH,
             height: WINDOW_HEIGHT,
-            resizable: false,
+            resizable: true,
             present_mode: PresentMode::AutoVsync,
             ..Default::default()
         })
