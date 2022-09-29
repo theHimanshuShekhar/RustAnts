@@ -18,8 +18,4 @@ pub struct PheromoneAge {
     pub age: i32,
 }
 #[derive(Component)]
-pub struct ID {
-    pub id: u32,
-}
-#[derive(Component)]
 pub struct Pheromone;

@@ -1,6 +1,6 @@
 [package]
 name = "rust_ants"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [dependencies]
@@ -8,7 +8,6 @@ bevy_egui = "0.16.1"
 bevy_prototype_lyon = "0.6.0"
 rand = "0.8.5"
 min-max = "0.1.8"
-random_color = "0.6.1"
 
 [dependencies.bevy]
 version = "0.8.1"
