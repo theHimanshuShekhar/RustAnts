@@ -6,11 +6,13 @@ use bevy::{prelude::*, time::FixedTimestep, window::PresentMode};
 use bevy_egui::EguiPlugin;
 use bevy_prototype_lyon::prelude::*;
 use food::FoodPlugin;
+use home::HomePlugin;
 use menu::MenuPlugin;
 
 mod ant;
 mod components;
 mod food;
+mod home;
 mod menu;
 
 pub const PI: f32 = 3.14159265358979323846264338327950288f32;
@@ -38,6 +40,7 @@ struct GlobalSettings {
     food_pheromone_color: [f32; 3],
     food_depot_count: i32,
     food_count_in_depot: i32,
+    home_count: i32,
 }
 
 fn main() {
@@ -62,6 +65,7 @@ fn main() {
             food_pheromone_color: [1.0, 0.35, 0.75],
             food_depot_count: 4,
             food_count_in_depot: 100,
+            home_count: 2,
         })
         .insert_resource(WinSize {
             width: WINDOW_WIDTH,
@@ -77,6 +81,7 @@ fn main() {
         .add_plugin(EguiPlugin)
         .add_plugin(MenuPlugin)
         .add_startup_system(setup_system)
+        .add_plugin(HomePlugin)
         .add_plugin(AntPlugin)
         .add_plugin(FoodPlugin)
         .run();
