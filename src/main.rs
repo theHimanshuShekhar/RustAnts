@@ -58,8 +58,8 @@ fn main() {
         })
         .insert_resource(GlobalSettings {
             move_speed: 100.,
-            ants_count: 10,
-            ants_size: 5.,
+            ants_count: 100,
+            ants_size: 2.,
             wander_strength: 0.05,
             pheremone_life: 50,
             home_pheromone_color: [0.2, 0.6, 0.4],

@@ -3,7 +3,7 @@ use bevy_prototype_lyon::prelude::*;
 
 use crate::{
     components::{Ant, HasFood, Pheromone, PheromoneAge},
-    GlobalSettings,
+    GlobalSettings, TIME_STEP,
 };
 
 struct TrailSpawnTimer(Timer);
@@ -13,8 +13,8 @@ pub struct PheromonePlugin;
 
 impl Plugin for PheromonePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(TrailSpawnTimer(Timer::from_seconds(0.05, true)))
-            .insert_resource(TrailDespawnTimer(Timer::from_seconds(0.05, true)))
+        app.insert_resource(TrailSpawnTimer(Timer::from_seconds(TIME_STEP * 2., true)))
+            .insert_resource(TrailDespawnTimer(Timer::from_seconds(TIME_STEP * 2., true)))
             .add_system(trail_spawn_system)
             .add_system(pheromone_update_system);
     }
@@ -44,16 +44,18 @@ fn trail_spawn_system(
             // );
 
             let pheromone_color = if *has_food {
-                bevy::prelude::Color::rgb(
+                bevy::prelude::Color::rgba(
                     settings.food_pheromone_color[0],
                     settings.food_pheromone_color[1],
                     settings.food_pheromone_color[2],
+                    0.2,
                 )
             } else {
-                bevy::prelude::Color::rgb(
+                bevy::prelude::Color::rgba(
                     settings.home_pheromone_color[0],
                     settings.home_pheromone_color[1],
                     settings.home_pheromone_color[2],
+                    0.2,
                 )
             };
 

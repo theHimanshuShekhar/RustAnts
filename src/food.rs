@@ -20,7 +20,7 @@ fn food_spawn_system(
     // choose random locations for food depots and spawn
 
     let shape = shapes::Circle {
-        radius: settings.ants_size * 0.5,
+        radius: settings.ants_size,
         ..Default::default()
     };
 

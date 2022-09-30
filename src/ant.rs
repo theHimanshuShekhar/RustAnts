@@ -62,6 +62,7 @@ fn ant_spawn_system(
 
 fn ant_update_system(
     mut query: Query<(&mut Direction, &mut Transform), With<Ant>>,
+    // sense_query: Query<Entity, Without<Ant>>,
     settings: ResMut<GlobalSettings>,
     win_size: Res<WinSize>,
 ) {
