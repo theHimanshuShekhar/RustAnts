@@ -4,7 +4,7 @@ use min_max::*;
 use rand::Rng;
 
 use crate::{
-    components::{Ant, Direction, Food},
+    components::{Ant, Direction, HasFood, Home},
     GlobalSettings, WinSize, TIME_STEP,
 };
 
@@ -21,33 +21,42 @@ impl Plugin for AntPlugin {
     }
 }
 
-fn ant_spawn_system(mut commands: Commands, settings: ResMut<GlobalSettings>) {
+fn ant_spawn_system(
+    mut commands: Commands,
+    settings: ResMut<GlobalSettings>,
+    mut query: Query<&Transform, With<Home>>,
+) {
     // Spawn Ant shape
     let shape = shapes::Circle {
         radius: settings.ants_size,
         ..Default::default()
     };
 
-    for _ in 0..settings.ants_count {
-        commands
-            .spawn_bundle(GeometryBuilder::build_as(
-                &shape,
-                DrawMode::Outlined {
-                    fill_mode: FillMode::color(Color::BLACK),
-                    outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 1.),
-                },
-                Transform::default(),
-            ))
-            .insert(Ant)
-            .insert(Direction {
-                angle: rand::thread_rng().gen_range(0.0..360.0),
-            })
-            .insert(Food { has_food: false })
-            .insert_bundle(SpatialBundle {
-                transform: Transform::from_xyz(0., 0., 1.),
-                visibility: Visibility { is_visible: true },
-                ..Default::default()
-            });
+    for transform in query.iter_mut() {
+        let home_x = transform.translation.x;
+        let home_y = transform.translation.y;
+
+        for _ in 0..settings.ants_count / settings.home_count {
+            commands
+                .spawn_bundle(GeometryBuilder::build_as(
+                    &shape,
+                    DrawMode::Outlined {
+                        fill_mode: FillMode::color(Color::BLACK),
+                        outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 1.),
+                    },
+                    Transform::default(),
+                ))
+                .insert(Ant)
+                .insert(Direction {
+                    angle: rand::thread_rng().gen_range(0.0..360.0),
+                })
+                .insert(HasFood { has_food: false })
+                .insert_bundle(SpatialBundle {
+                    transform: Transform::from_xyz(home_x, home_y, 5.),
+                    visibility: Visibility { is_visible: true },
+                    ..Default::default()
+                });
+        }
     }
 }
 
