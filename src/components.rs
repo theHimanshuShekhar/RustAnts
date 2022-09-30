@@ -1,7 +1,7 @@
 use bevy::prelude::Component;
 
 #[derive(Component)]
-pub struct Food {
+pub struct HasFood {
     pub has_food: bool,
 }
 
@@ -19,3 +19,9 @@ pub struct PheromoneAge {
 }
 #[derive(Component)]
 pub struct Pheromone;
+
+#[derive(Component)]
+pub struct Food;
+
+#[derive(Component)]
+pub struct Home;

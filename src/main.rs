@@ -41,6 +41,7 @@ struct GlobalSettings {
     food_depot_count: i32,
     food_count_in_depot: i32,
     home_count: i32,
+    home_radius: f32,
 }
 
 fn main() {
@@ -66,6 +67,7 @@ fn main() {
             food_depot_count: 4,
             food_count_in_depot: 100,
             home_count: 2,
+            home_radius: 20.,
         })
         .insert_resource(WinSize {
             width: WINDOW_WIDTH,

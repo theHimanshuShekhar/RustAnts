@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use rand::Rng;
 
-use crate::{GlobalSettings, WinSize};
+use crate::{components::Home, GlobalSettings, WinSize};
 
 pub struct HomePlugin;
 
@@ -18,13 +18,14 @@ fn home_spawn_system(
     settings: ResMut<GlobalSettings>,
 ) {
     let home_size = 20.;
-    let max_x: f32 = win_size.width / 2. - home_size - 10. as f32;
-    let min_x: f32 = -win_size.width / 2. + home_size + 10. as f32;
-    let max_y: f32 = win_size.height / 2. - home_size - 10. as f32;
-    let min_y: f32 = -win_size.height / 2. + home_size + 10. as f32;
+    let min_distance_from_edges = 50.;
+    let max_x: f32 = win_size.width / 2. - home_size - min_distance_from_edges as f32;
+    let min_x: f32 = -win_size.width / 2. + home_size + min_distance_from_edges as f32;
+    let max_y: f32 = win_size.height / 2. - home_size - min_distance_from_edges as f32;
+    let min_y: f32 = -win_size.height / 2. + home_size + min_distance_from_edges as f32;
 
     let shape = shapes::Circle {
-        radius: 20.,
+        radius: settings.home_radius,
         ..Default::default()
     };
 
@@ -45,6 +46,7 @@ fn home_spawn_system(
                 transform: Transform::from_xyz(home_x, home_y, 10.),
                 visibility: Visibility { is_visible: true },
                 ..Default::default()
-            });
+            })
+            .insert(Home);
     }
 }

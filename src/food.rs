@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 use rand::Rng;
 
-use crate::{GlobalSettings, WinSize};
+use crate::{components::Food, GlobalSettings, WinSize};
 
 pub struct FoodPlugin;
 
@@ -55,7 +55,8 @@ fn food_spawn_system(
                     transform: Transform::from_xyz(depot_x + variance_x, depot_y + variance_y, 0.1),
                     visibility: Visibility { is_visible: true },
                     ..Default::default()
-                });
+                })
+                .insert(Food);
         }
     }
 }

@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    components::{Ant, Food, Pheromone, PheromoneAge},
+    components::{Ant, HasFood, Pheromone, PheromoneAge},
     GlobalSettings,
 };
 
@@ -24,7 +24,7 @@ fn trail_spawn_system(
     mut commands: Commands,
     time: Res<Time>,
     mut timer: ResMut<TrailSpawnTimer>,
-    mut query: Query<(&mut Food, &mut Transform), With<Ant>>,
+    mut query: Query<(&mut HasFood, &mut Transform), With<Ant>>,
     settings: ResMut<GlobalSettings>,
 ) {
     // Spawn Pheromone shape
