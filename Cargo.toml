@@ -25,7 +25,7 @@ features = [
   "bevy_ui",            # UI toolkit
 
   # Development/Debug features:
-  "dynamic",      # Dynamic linking for faster compile-times
+  # "dynamic",      # Dynamic linking for faster compile-times
   # "wgpu_trace",   # WGPU/rendering tracing
 ]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
