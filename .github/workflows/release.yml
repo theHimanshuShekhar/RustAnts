@@ -17,7 +17,7 @@ jobs:
       - name: Compile and release
         uses: rust-build/rust-build.action@v1.3.2
         env:
-          TOOLCHAIN_VERSION: nightly
+          TOOLCHAIN_VERSION: stable
           MINIFY: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
