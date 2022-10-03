@@ -15,8 +15,8 @@ default-features = false
 features = [
    # Bevy functionality:
   "bevy_winit",         # Window management
-  "animation",          # Animation support
-  "filesystem_watcher", # Asset hot-reloading
+  # "animation",          # Animation support
+  # "filesystem_watcher", # Asset hot-reloading
   "x11",                # Linux: Support X11 windowing system
   "bevy_render",        # Rendering framework core
   "bevy_core_pipeline", # Common rendering abstractions
@@ -25,7 +25,7 @@ features = [
   "bevy_ui",            # UI toolkit
 
   # Development/Debug features:
-  "dynamic",      # Dynamic linking for faster compile-times
+  # "dynamic",      # Dynamic linking for faster compile-times
   # "wgpu_trace",   # WGPU/rendering tracing
 ]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
