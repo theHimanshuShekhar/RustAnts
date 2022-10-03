@@ -47,7 +47,7 @@ fn food_spawn_system(
                     &shape,
                     DrawMode::Outlined {
                         fill_mode: FillMode::color(Color::GREEN),
-                        outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 0.5),
+                        outline_mode: StrokeMode::new(bevy::prelude::Color::BLACK, 0.),
                     },
                     Transform::default(),
                 ))

@@ -15,8 +15,8 @@ default-features = false
 features = [
    # Bevy functionality:
   "bevy_winit",         # Window management
-  "animation",          # Animation support
-  "filesystem_watcher", # Asset hot-reloading
+  # "animation",          # Animation support
+  # "filesystem_watcher", # Asset hot-reloading
   "x11",                # Linux: Support X11 windowing system
   "bevy_render",        # Rendering framework core
   "bevy_core_pipeline", # Common rendering abstractions

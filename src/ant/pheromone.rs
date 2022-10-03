@@ -13,8 +13,11 @@ pub struct PheromonePlugin;
 
 impl Plugin for PheromonePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(TrailSpawnTimer(Timer::from_seconds(TIME_STEP * 2., true)))
-            .insert_resource(TrailDespawnTimer(Timer::from_seconds(TIME_STEP * 2., true)))
+        app.insert_resource(TrailSpawnTimer(Timer::from_seconds(TIME_STEP * 2.5, true)))
+            .insert_resource(TrailDespawnTimer(Timer::from_seconds(
+                TIME_STEP * 2.5,
+                true,
+            )))
             .add_system(trail_spawn_system)
             .add_system(pheromone_update_system);
     }
