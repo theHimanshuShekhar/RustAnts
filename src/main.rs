@@ -15,10 +15,8 @@ mod food;
 mod home;
 mod menu;
 
-pub const PI: f32 = 3.14159265358979323846264338327950288f32;
-
 // Defines the amount of time that should elapse between each physics step.
-const TIME_STEP: f32 = 1.0 / 60.0;
+const TIME_STEP: f32 = 1. / 60.0;
 
 // Window Size
 const WINDOW_HEIGHT: f32 = 720.;
@@ -48,7 +46,7 @@ struct GlobalSettings {
 fn main() {
     App::new()
         .add_system_set(SystemSet::new().with_run_criteria(FixedTimestep::step(TIME_STEP as f64)))
-        .insert_resource(ClearColor(Color::WHITE))
+        .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(WindowDescriptor {
             title: "RustANTS!".to_string(),
             width: WINDOW_WIDTH,
@@ -58,18 +56,18 @@ fn main() {
             ..Default::default()
         })
         .insert_resource(GlobalSettings {
-            move_speed: 100.,
-            ants_count: 100,
+            move_speed: 50.,
+            ants_count: 10,
             ants_size: 2.,
-            wander_strength: 0.05,
-            pheremone_life: 50,
+            wander_strength: 0.1,
+            pheremone_life: 20,
             home_pheromone_color: [0.2, 0.6, 0.4],
             food_pheromone_color: [1.0, 0.35, 0.75],
-            food_depot_count: 4,
+            food_depot_count: 2,
             food_count_in_depot: 100,
             home_count: 2,
             home_radius: 20.,
-            detection_radius: 15.,
+            detection_radius: 10.,
         })
         .insert_resource(WinSize {
             width: WINDOW_WIDTH,
@@ -79,11 +77,11 @@ fn main() {
         .add_plugin(ShapePlugin)
         .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(LogDiagnosticsPlugin {
-            wait_duration: Duration::new(10, 0),
+            wait_duration: Duration::new(60, 0),
             ..Default::default()
         })
-        .add_plugin(EguiPlugin)
-        .add_plugin(MenuPlugin)
+        // .add_plugin(EguiPlugin)
+        // .add_plugin(MenuPlugin)
         .add_startup_system(setup_system)
         .add_plugin(HomePlugin)
         .add_plugin(AntPlugin)

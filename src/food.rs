@@ -35,12 +35,12 @@ fn food_spawn_system(
 
         for _ in 0..settings.food_count_in_depot {
             let variance_x = rand::thread_rng().gen_range(
-                -shape.radius * (settings.food_count_in_depot as f32 * 0.1)
-                    ..shape.radius * (settings.food_count_in_depot as f32 * 0.1),
+                -shape.radius * (settings.food_count_in_depot as f32 * 0.2)
+                    ..shape.radius * (settings.food_count_in_depot as f32 * 0.2),
             );
             let variance_y = rand::thread_rng().gen_range(
-                -shape.radius * (settings.food_count_in_depot as f32 * 0.1)
-                    ..shape.radius * (settings.food_count_in_depot as f32 * 0.1),
+                -shape.radius * (settings.food_count_in_depot as f32 * 0.2)
+                    ..shape.radius * (settings.food_count_in_depot as f32 * 0.2),
             );
             commands
                 .spawn_bundle(GeometryBuilder::build_as(

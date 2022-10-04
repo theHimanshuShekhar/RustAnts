@@ -25,3 +25,8 @@ pub struct Food;
 
 #[derive(Component)]
 pub struct Home;
+
+#[derive(Component)]
+pub struct PheromoneType {
+    pub pheromone_type: String,
+}

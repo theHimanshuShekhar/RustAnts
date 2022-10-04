@@ -43,7 +43,7 @@ fn home_spawn_system(
                 Transform::default(),
             ))
             .insert_bundle(SpatialBundle {
-                transform: Transform::from_xyz(home_x, home_y, 10.),
+                transform: Transform::from_xyz(home_x, home_y, 0.1),
                 visibility: Visibility { is_visible: true },
                 ..Default::default()
             })

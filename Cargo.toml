@@ -17,12 +17,12 @@ features = [
   "bevy_winit",         # Window management
   # "animation",          # Animation support
   # "filesystem_watcher", # Asset hot-reloading
-  "x11",                # Linux: Support X11 windowing system
+  # "x11",                # Linux: Support X11 windowing system
   "bevy_render",        # Rendering framework core
   "bevy_core_pipeline", # Common rendering abstractions
   "bevy_sprite",        # 2D (sprites) rendering
-  "bevy_text",          # Text/font rendering
-  "bevy_ui",            # UI toolkit
+  # "bevy_text",          # Text/font rendering
+  # "bevy_ui",            # UI toolkit
 
   # Development/Debug features:
   # "dynamic",      # Dynamic linking for faster compile-times

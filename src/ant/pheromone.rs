@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
 
 use crate::{
-    components::{Ant, HasFood, Pheromone, PheromoneAge},
+    components::{Ant, HasFood, Pheromone, PheromoneAge, PheromoneType},
     GlobalSettings, TIME_STEP,
 };
 
@@ -13,9 +13,9 @@ pub struct PheromonePlugin;
 
 impl Plugin for PheromonePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(TrailSpawnTimer(Timer::from_seconds(TIME_STEP * 2.5, true)))
+        app.insert_resource(TrailSpawnTimer(Timer::from_seconds(TIME_STEP * 5.5, true)))
             .insert_resource(TrailDespawnTimer(Timer::from_seconds(
-                TIME_STEP * 2.5,
+                TIME_STEP * 5.5,
                 true,
             )))
             .add_system(trail_spawn_system)
@@ -31,34 +31,29 @@ fn trail_spawn_system(
     settings: ResMut<GlobalSettings>,
 ) {
     // Spawn Pheromone shape
-    let shape = shapes::Circle {
-        radius: 3.,
-        ..Default::default()
+    let shape = shapes::RegularPolygon {
+        sides: 3,
+        feature: shapes::RegularPolygonFeature::Radius(2.),
+        center: Vec2::new(0., 0.),
     };
     if timer.0.tick(time.delta()).just_finished() {
-        for (mut food, mut transform) in query.iter_mut() {
+        for (food, mut transform) in query.iter_mut() {
             let translation = &mut transform.translation;
-            let has_food = &mut food.has_food;
-
-            // println!(
-            //     "x:{},y:{} | hasfood:{}",
-            //     translation.x, translation.y, has_food
-            //     settings.home_pheromone_color
-            // );
+            let has_food = &food.has_food;
 
             let pheromone_color = if *has_food {
                 bevy::prelude::Color::rgba(
                     settings.food_pheromone_color[0],
                     settings.food_pheromone_color[1],
                     settings.food_pheromone_color[2],
-                    0.2,
+                    0.1,
                 )
             } else {
                 bevy::prelude::Color::rgba(
                     settings.home_pheromone_color[0],
                     settings.home_pheromone_color[1],
                     settings.home_pheromone_color[2],
-                    0.2,
+                    0.1,
                 )
             };
 
@@ -72,6 +67,13 @@ fn trail_spawn_system(
                     Transform::from_xyz(translation.x, translation.y, 0.),
                 ))
                 .insert(Pheromone)
+                .insert(PheromoneType {
+                    pheromone_type: if *has_food {
+                        String::from("food")
+                    } else {
+                        String::from("home")
+                    },
+                })
                 .insert(PheromoneAge { age: 0 });
         }
     }
